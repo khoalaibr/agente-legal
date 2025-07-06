@@ -91,4 +91,41 @@ Se define y crea la estructura de directorios del proyecto, basada en una clara 
     ```bash
     rm src/App.css src/assets/react.svg
     ```
+## Fase 3: Migración de Diseño Estático a React
 
+Se inicia el proceso de traducir un diseño HTML/CSS estático a la arquitectura de componentes de React del proyecto.
+
+### Paso 3.1: Integración de Design Tokens
+
+Se han extraído los tokens de diseño (colores, sombras) del archivo estático y se han integrado en `tailwind.config.js` para que estén disponibles globalmente en la aplicación.
+
+**`tailwind.config.js` (extracto):**
+```javascript
+// ...
+extend: {
+  colors: {
+    primary: { /* ... */ },
+    secondary: { /* ... */ },
+    accent: { /* ... */ },
+  },
+  boxShadow: {
+    'custom': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    'custom-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+  },
+}
+// ...
+### Paso 3.2: Corrección de Estilos del Layout
+
+* **Problema:** El componente `Sidebar` no mostraba los estilos correctos (fondo, color de texto).
+* **Causa:** Se omitió la migración de la clase de CSS personalizada `.gradient-bg` del archivo estático original.
+* **Solución:** Se añadió la definición de la clase `.gradient-bg` al archivo global `src/styles/index.css` para que esté disponible en toda la aplicación.
+
+**`src/styles/index.css`:**
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient-bg {
+  background: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 100%);
+}

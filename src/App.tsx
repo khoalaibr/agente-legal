@@ -1,36 +1,41 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { StyleGuidePage } from './pages/StyleGuidePage';
-
-// Esta será nuestra página de inicio temporal
-function HomePage() {
-  return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold">Página de Inicio</h1>
-      <p className="mt-4">Este es el punto de partida de nuestra aplicación.</p>
-    </div>
-  )
-}
+import { PageLayout } from './components/layout/PageLayout';
+import { DashboardPage } from './pages/DashboardPage';
 
 function App() {
   return (
-    <div>
-      {/* Menú de navegación simple para movernos entre páginas */}
-      <nav className="bg-gray-800 text-white p-4">
-        <ul className="flex space-x-4">
-          <li><Link to="/" className="hover:underline">Inicio</Link></li>
-          <li><Link to="/style-guide" className="hover:underline">Guía de Estilos</Link></li>
-        </ul>
-      </nav>
+    <Routes>
+      {/* Ruta para la Guía de Estilos (no usa el layout principal) */}
+      <Route path="/style-guide" element={<StyleGuidePage />} />
 
-      {/* El componente Routes renderizará el componente de la ruta que coincida */}
-      <main>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/style-guide" element={<StyleGuidePage />} />
-        </Routes>
-      </main>
-    </div>
-  )
+      {/* Redirige la ruta raíz hacia el dashboard */}
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+      {/* Rutas que SÍ usan el layout del dashboard */}
+      <Route
+        path="/dashboard"
+        element={
+          <PageLayout>
+            <DashboardPage />
+          </PageLayout>
+        }
+      />
+      
+      {/* Aquí añadiremos el resto de las páginas (casos, agenda, etc.) 
+          usando el mismo PageLayout para mantener la consistencia.
+          Ejemplo:
+          <Route 
+            path="/cases"
+            element={
+              <PageLayout>
+                <CasesPage /> 
+              </PageLayout>
+            }
+          />
+      */}
+    </Routes>
+  );
 }
 
-export default App
+export default App;

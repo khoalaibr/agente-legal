@@ -66,7 +66,7 @@ export function Sidebar({ isMobileOpen, isExpanded, onToggleExpand }: SidebarPro
             <SidebarItem to="/dashboard" icon={faTachometerAlt} label="Dashboard" isExpanded={isExpanded} />
             <SidebarItem to="/cases" icon={faFolderOpen} label="Casos" isExpanded={isExpanded} />
             {/* ... resto de los items ... */}
-            <SidebarItem to="/schedule" icon={faCalendarAlt} label="Agenda" isExpanded={isExpanded} />
+            <SidebarItem to="/agenda" icon={faCalendarAlt} label="Agenda" isExpanded={isExpanded} />
             <SidebarItem to="/documents" icon={faFileAlt} label="Documentos" isExpanded={isExpanded} />
             <SidebarItem to="/clients" icon={faUsers} label="Clientes" isExpanded={isExpanded} />
           </nav>

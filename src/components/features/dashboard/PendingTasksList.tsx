@@ -6,7 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Modal } from '../../ui/Modal';
 import { NewTaskForm } from './NewTaskForm';
-import { addTask, type TaskState } from '../../../features/dashboard/dashboardSlice';
+import { addTask } from '../../../features/dashboard/dashboardSlice';
+
+// El tipo de los datos que el formulario enviará
+type TaskFormData = Parameters<typeof addTask>[0];
 
 export function PendingTasksList() {
   const tasks = useAppSelector((state) => state.dashboard.pendingTasks);
@@ -16,7 +19,8 @@ export function PendingTasksList() {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleAddTask = (taskData: { text: string; priority: TaskState['priority'] }) => {
+  // La función ahora recibe el objeto completo del formulario
+  const handleAddTask = (taskData: TaskFormData) => {
     dispatch(addTask(taskData));
     handleCloseModal(); // Cierra el modal después de añadir la tarea
   };

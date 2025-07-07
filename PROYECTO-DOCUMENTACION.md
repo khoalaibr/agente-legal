@@ -129,3 +129,4 @@ extend: {
 .gradient-bg {
   background: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 100%);
 }
+

@@ -41,11 +41,24 @@ export interface TaskState {
   description?: string;
 }
 
+// Interfaz ChatMessageState actualizada
 export interface ChatMessageState {
     id: string;
     sender: 'ia' | 'user';
     text: string;
-    actions?: string[];
+    type: 'standard' | 'thinking' | 'citation' | 'error';
+    citation?: {
+        title: string;
+        source: string;
+    };
+}
+
+// Nuevo tipo para el historial de conversaciones
+export interface ConversationHistoryItem {
+    id: string;
+    title: string;
+    preview: string;
+    date: string;
 }
 
 export interface DocumentState {
@@ -79,13 +92,52 @@ export interface CalendarEventState {
     iaSuggestion?: string;
 }
 
+
+// Nuevos tipos para el Panel de Referencias
+export interface ReferenceItemState {
+    id: string;
+    title: string;
+    description: string;
+    tag: string;
+    relevance: 'Alta' | 'Media' | 'Baja';
+}
+
+// Nuevos tipos para el Generador de Escritos
+export interface TemplateState {
+    id: string;
+    title: string;
+    description: string;
+    tags: { text: string; color: string }[];
+    timeToComplete: string;
+    usageCount: number;
+    isNew?: boolean;
+    isFavorite?: boolean;
+}
+
+export interface CategoryState {
+    id: string;
+    name: string;
+    icon: 'home' | 'briefcase' | 'users' | 'store';
+    iconColor: string;
+    bgColor: string;
+    templateCount: number;
+}
+
 interface DashboardState {
   stats: StatCardState[];
   recentCases: CaseState[];
   pendingTasks: TaskState[];
   chatHistory: ChatMessageState[];
+  conversations: ConversationHistoryItem[];
   recentDocuments: DocumentState[];
   calendarEvents: CalendarEventState[];
+  references: { // <-- Nueva propiedad
+      normativa: ReferenceItemState[];
+      jurisprudencia: ReferenceItemState[];
+      casos: ReferenceItemState[];
+  };
+  templates: TemplateState[];
+  categories: CategoryState[];
 }
 
 // --- Estado Inicial ---
@@ -109,10 +161,25 @@ const initialState: DashboardState = {
     { id: 'task-5', text: 'Actualizar registro de horas facturables', priority: 'Normal', completed: false },
   ],
   chatHistory: [
-    { id: 'chat-1', sender: 'ia', text: 'Buenos días Dr. Martínez. Tiene 3 tareas urgentes para hoy y una audiencia programada para mañana a las 10:30 AM. ¿En qué puedo ayudarle?' },
-    { id: 'chat-2', sender: 'user', text: 'Necesito buscar jurisprudencia reciente sobre responsabilidad civil por daños en accidentes de tránsito para el caso Rodríguez.' },
-    { id: 'chat-3', sender: 'ia', text: 'Encontré 5 sentencias recientes relevantes. La más significativa es SCJ 123/2023 que establece nuevos criterios para determinar la responsabilidad objetiva en estos casos. Según el artículo 1324 del Código Civil uruguayo...', actions: ['Ver sentencias', 'Generar informe', 'Aplicar al caso'] },
+    { id: 'chat-1', sender: 'ia', type: 'standard', text: 'Bienvenido al Asistente Legal IA. ¿En qué puedo ayudarte hoy?'},
+    { id: 'chat-2', sender: 'user', type: 'standard', text: 'Necesito información sobre indemnización por despido injustificado. Tengo un cliente que trabajó durante 5 años en una empresa y fue despedido sin causa aparente.' },
+    { id: 'chat-3', sender: 'ia', type: 'thinking', text: 'Analizando normativa laboral aplicable...' },
+    { id: 'chat-4', sender: 'ia', type: 'citation', text: 'De acuerdo con la legislación laboral uruguaya, específicamente la Ley N° 10.489, un trabajador despedido sin causa justificada tiene derecho a una indemnización.', citation: { title: 'Ley N° 10.489 - Indemnización por Despido', source: 'IMPO' } },
   ],
+  conversations: [
+      { id: 'conv-1', title: 'Consulta sobre despido injustificado', preview: 'Análisis de indemnización por despido sin causa...', date: 'Hoy, 10:30' },
+      { id: 'conv-2', title: 'Interpretación del Código Civil', preview: 'Artículo 1324 sobre responsabilidad contractual...', date: 'Ayer, 15:45' },
+      { id: 'conv-3', title: 'Jurisprudencia sobre arrendamiento', preview: 'Búsqueda de precedentes sobre cláusulas...', date: '15/07/2025' },
+  ],
+  references: {
+      normativa: [
+          { id: 'ref-norm-1', title: 'Ley N° 10.489', description: 'Indemnización por despido', tag: 'Laboral', relevance: 'Alta' },
+          { id: 'ref-norm-2', title: 'Ley N° 18.091', description: 'Prescripción de créditos laborales', tag: 'Laboral', relevance: 'Alta' },
+          { id: 'ref-norm-3', title: 'Decreto-Ley N° 14.188', description: 'Despido especial - Trabajadora grávida', tag: 'Laboral', relevance: 'Media' },
+      ],
+      jurisprudencia: [],
+      casos: [],
+  },
   recentDocuments: [
     { id: 'doc-1', title: 'Contrato de Arrendamiento', caseName: 'Caso Pérez - Sucesión', author: { name: 'Dra. Ana García', avatarUrl: 'https://randomuser.me/api/portraits/women/33.jpg' }, tags: [{ text: 'Contrato', color: 'bg-blue-100 text-blue-800' }, { text: 'Arrendamiento', color: 'bg-sky-100 text-sky-800' }], contentPreview: 'En la ciudad de Montevideo, a los 10 días del mes de julio de 2025, entre: Por una parte, MARÍA PÉREZ... y por otra parte, JUAN GÓMEZ...', entities: [ { type: 'person', value: 'María Pérez' }, { type: 'person', value: 'Juan Gómez' }, { type: 'date', value: '10/07/2025' }, ], lastUpdated: 'Hace 10 minutos', iaSuggestion: 'Se ha detectado que falta la cláusula de actualización de alquiler según IPC.', icon: 'file-contract', iconColor: 'text-blue-600' },
     { id: 'doc-2', title: 'Escrito de Contestación', caseName: 'Constructora Horizonte - Contrato', author: { name: 'Dr. Carlos Rodríguez', avatarUrl: 'https://randomuser.me/api/portraits/men/45.jpg' }, tags: [{ text: 'Escrito judicial', color: 'bg-red-100 text-red-800' }, { text: 'Contestación', color: 'bg-rose-100 text-rose-800' }], contentPreview: 'JUZGADO LETRADO DE PRIMERA INSTANCIA EN LO CIVIL DE 5º TURNO. CONSTRUCTORA HORIZONTE S.A. c/ MUNICIPALIDAD DE CIUDAD DEL ESTE...', entities: [ { type: 'organization', value: 'Constructora Horizonte S.A.' }, { type: 'person', value: 'Juan Martínez' }, ], lastUpdated: 'Ahora mismo', iaSuggestion: 'Se ha encontrado jurisprudencia reciente que podría fortalecer sus argumentos.', icon: 'file-alt', iconColor: 'text-red-600' },
@@ -124,6 +191,18 @@ const initialState: DashboardState = {
     { id: 'event-2', title: 'Reunión con Cliente', caseName: 'González - Divorcio', date: '2025-07-15T15:00:00', duration: '15:00 a 16:00', type: 'reunion', typeColor: 'bg-blue-100 text-blue-800', icon: 'users', location: 'Oficina - Sala de Reuniones 2', participants: [ { name: 'Dr. Martínez', avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg' }, { name: 'Carlos González', avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg' } ], iaSuggestion: 'Se ha encontrado nueva jurisprudencia relevante para discutir en la reunión.' },
     { id: 'event-3', title: 'Vencimiento Plazo', caseName: 'Pérez - Sucesión', date: '2025-07-16T23:59:59', duration: 'Todo el día', type: 'plazo', typeColor: 'bg-green-100 text-green-800', icon: 'file-signature' },
     { id: 'event-4', title: 'Audiencia de Prueba', caseName: 'Rodríguez c/ Seguros Confianza', date: '2025-07-18T09:30:00', duration: '09:30 a 12:00', type: 'audiencia', typeColor: 'bg-red-100 text-red-800', icon: 'gavel', location: 'Juzgado Civil 5º Turno - Sala 301' },
+  ],
+  templates: [
+    { id: 'tpl-1', title: 'Contrato de Arrendamiento', description: 'Contrato estándar para arrendamiento de inmuebles', tags: [{ text: 'Civil', color: 'bg-blue-100 text-blue-800' }, { text: 'Comercial', color: 'bg-yellow-100 text-yellow-800' }], timeToComplete: '15-20 min', usageCount: 1250, isFavorite: false },
+    { id: 'tpl-2', title: 'Demanda Laboral', description: 'Demanda por despido injustificado', tags: [{ text: 'Laboral', color: 'bg-pink-100 text-pink-800' }], timeToComplete: '25-30 min', usageCount: 980, isFavorite: false },
+    { id: 'tpl-3', title: 'Recurso de Apelación', description: 'Recurso contra sentencia de primera instancia', tags: [{ text: 'Civil', color: 'bg-blue-100 text-blue-800' }, { text: 'Penal', color: 'bg-red-100 text-red-800' }], timeToComplete: '30-40 min', usageCount: 120, isNew: true, isFavorite: false },
+    { id: 'tpl-4', title: 'Contrato de Trabajo', description: 'Contrato laboral estándar', tags: [{ text: 'Laboral', color: 'bg-pink-100 text-pink-800' }], timeToComplete: '20-25 min', usageCount: 1450, isFavorite: true },
+  ],
+  categories: [
+    { id: 'cat-1', name: 'Civil', icon: 'home', iconColor: 'text-blue-600', bgColor: 'bg-blue-100', templateCount: 42 },
+    { id: 'cat-2', name: 'Laboral', icon: 'briefcase', iconColor: 'text-pink-600', bgColor: 'bg-pink-100', templateCount: 28 },
+    { id: 'cat-3', name: 'Familia', icon: 'users', iconColor: 'text-green-600', bgColor: 'bg-green-100', templateCount: 35 },
+    { id: 'cat-4', name: 'Comercial', icon: 'store', iconColor: 'text-yellow-600', bgColor: 'bg-yellow-100', templateCount: 31 },
   ]
 };
 
@@ -177,10 +256,32 @@ export const dashboardSlice = createSlice({
             ...action.payload,
         };
         state.calendarEvents.push(newEvent);
+    },
+    addChatMessage: (state, action: PayloadAction<Omit<ChatMessageState, 'id'>>) => {
+        // Si el último mensaje era de "pensando", lo reemplazamos. Si no, añadimos uno nuevo.
+        const lastMessage = state.chatHistory[state.chatHistory.length - 1];
+        if (lastMessage?.type === 'thinking') {
+            state.chatHistory[state.chatHistory.length - 1] = { id: lastMessage.id, ...action.payload };
+        } else {
+            state.chatHistory.push({ id: uuidv4(), ...action.payload });
+        }
+    },
+    setAiThinking: (state, action: PayloadAction<boolean>) => {
+        // Elimina cualquier mensaje de "pensando" existente
+        state.chatHistory = state.chatHistory.filter(m => m.type !== 'thinking');
+        // Si se activa, añade un nuevo mensaje de "pensando"
+        if (action.payload) {
+            state.chatHistory.push({
+                id: uuidv4(),
+                sender: 'ia',
+                type: 'thinking',
+                text: 'Analizando consulta...'
+            });
+        }
     }
   },
 });
 
-export const { toggleTaskCompletion, addTask, addCase, addCalendarEvent } = dashboardSlice.actions;
+export const { toggleTaskCompletion, addTask, addCase, addCalendarEvent, addChatMessage, setAiThinking } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

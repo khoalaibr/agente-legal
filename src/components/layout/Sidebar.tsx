@@ -77,8 +77,8 @@ export function Sidebar({ isMobileOpen, isExpanded, onToggleExpand }: SidebarPro
           <p className={clsx('text-xs uppercase tracking-wider text-secondary-300 mb-2', { 'hidden': !isExpanded })}>Herramientas</p>
           <nav>
             <SidebarItem to="/legal-search" icon={faSearch} label="Búsqueda Legal" isExpanded={isExpanded} />
-            <SidebarItem to="/ai-assistant" icon={faRobot} label="Asistente IA" isExpanded={isExpanded} />
-            <SidebarItem to="/doc-generator" icon={faFileSignature} label="Generador de Escritos" isExpanded={isExpanded} />
+            <SidebarItem to="/asistente-ia" icon={faRobot} label="Asistente IA" isExpanded={isExpanded} />
+            <SidebarItem to="/generador-escritos" icon={faFileSignature} label="Generador de Escritos" isExpanded={isExpanded} />
             <SidebarItem to="/calculator" icon={faCalculator} label="Calculadora de Plazos" isExpanded={isExpanded} />
           </nav>
         </div>

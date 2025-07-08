@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import dashboardReducer from '../features/dashboard/dashboardSlice'; // <-- Importamos el reducer
+import dashboardReducer from '../features/dashboard/dashboardSlice';
 
 export const store = configureStore({
   reducer: {
-    // Registramos nuestro slice en la tienda.
-    // La clave 'dashboard' será el nombre de esta porción del estado.
     dashboard: dashboardReducer,
   },
 });

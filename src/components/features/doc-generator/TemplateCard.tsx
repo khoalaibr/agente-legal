@@ -7,9 +7,10 @@ import { Button } from '../../ui/Button';
 
 type TemplateCardProps = {
   template: TemplateState;
+  onCreateClick: (template: TemplateState) => void; // <-- Nueva prop
 };
 
-export function TemplateCard({ template }: TemplateCardProps) {
+export function TemplateCard({ template, onCreateClick }: TemplateCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-px flex flex-col h-full">
       {template.isNew && (
@@ -42,7 +43,8 @@ export function TemplateCard({ template }: TemplateCardProps) {
             <span><FontAwesomeIcon icon={faCopy} className="mr-1" /> {template.usageCount} usos</span>
           </div>
           
-          <Button variant="primary" size="sm" className="w-full">
+          {/* El botón ahora llama a la función que recibe por props */}
+          <Button onClick={() => onCreateClick(template)} variant="primary" size="sm" className="w-full">
             <FontAwesomeIcon icon={faPlus} className="mr-1" /> Crear
           </Button>
         </div>

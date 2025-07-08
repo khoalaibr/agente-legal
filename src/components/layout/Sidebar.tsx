@@ -3,21 +3,19 @@ import {
   faTachometerAlt, faFolderOpen, faCalendarAlt, faFileAlt, faUsers,
   faSearch, faRobot, faFileSignature, faCalculator,
   faUserCog, faCog, faQuestionCircle,
-  faChevronLeft, faChevronRight // <-- Nuevos iconos para el botón de toggle
+  faChevronLeft, faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { clsx } from 'clsx';
 import { NavLink } from 'react-router-dom';
 
-// Props para cada item del menú
 type SidebarItemProps = {
   icon: IconDefinition;
   label: string;
   to: string;
-  isExpanded: boolean; // <-- Prop para saber si el sidebar está expandido
+  isExpanded: boolean;
 };
 
-// Sub-componente para cada enlace del menú
 function SidebarItem({ icon, label, to, isExpanded }: SidebarItemProps) {
   return (
     <NavLink
@@ -27,45 +25,39 @@ function SidebarItem({ icon, label, to, isExpanded }: SidebarItemProps) {
           'flex items-center py-2 px-3 rounded-md mb-1 transition-colors duration-200',
           'hover:bg-white/20',
           { 'bg-white/20 border-l-4 border-white': isActive },
-          { 'justify-center': !isExpanded } // <-- Centra el icono cuando está colapsado
+          { 'justify-center': !isExpanded }
         )
       }
     >
       <FontAwesomeIcon icon={icon} className={clsx('w-5', { 'mr-3': isExpanded })} />
-      {/* El label solo se muestra si el sidebar está expandido */}
       <span className={clsx({ 'hidden': !isExpanded })}>{label}</span>
     </NavLink>
   );
 }
 
-// Props para el componente Sidebar principal
 type SidebarProps = {
-  isMobileOpen: boolean; // Para controlar su visibilidad en móviles
-  isExpanded: boolean;   // Para controlar si está expandido o colapsado
-  onToggleExpand: () => void; // Función para cambiar el estado de expansión
+  isMobileOpen: boolean;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
 };
 
 export function Sidebar({ isMobileOpen, isExpanded, onToggleExpand }: SidebarProps) {
   return (
-    // El contenedor <aside> ahora tiene una clase de ancho dinámica
     <aside
       className={clsx(
         'gradient-bg text-white flex-shrink-0 overflow-y-auto transition-all duration-300 flex flex-col',
-        'md:relative md:translate-x-0', // Estilos para desktop
-        { 'w-64': isExpanded, 'w-20': !isExpanded }, // <-- Lógica de ancho
-        // Lógica para mostrar/ocultar en móvil
+        'md:relative md:translate-x-0',
+        { 'w-64': isExpanded, 'w-20': !isExpanded },
         { 'translate-x-0': isMobileOpen, '-translate-x-full absolute': !isMobileOpen }
       )}
     >
       <div className="flex-1 p-4">
-        {/* Pasamos la prop isExpanded a cada SidebarItem */}
         {/* Sección Principal */}
         <div className="mb-8">
           <p className={clsx('text-xs uppercase tracking-wider text-secondary-300 mb-2', { 'hidden': !isExpanded })}>Principal</p>
           <nav>
             <SidebarItem to="/dashboard" icon={faTachometerAlt} label="Dashboard" isExpanded={isExpanded} />
             <SidebarItem to="/cases" icon={faFolderOpen} label="Casos" isExpanded={isExpanded} />
-            {/* ... resto de los items ... */}
             <SidebarItem to="/agenda" icon={faCalendarAlt} label="Agenda" isExpanded={isExpanded} />
             <SidebarItem to="/documents" icon={faFileAlt} label="Documentos" isExpanded={isExpanded} />
             <SidebarItem to="/clients" icon={faUsers} label="Clientes" isExpanded={isExpanded} />
@@ -78,6 +70,7 @@ export function Sidebar({ isMobileOpen, isExpanded, onToggleExpand }: SidebarPro
           <nav>
             <SidebarItem to="/legal-search" icon={faSearch} label="Búsqueda Legal" isExpanded={isExpanded} />
             <SidebarItem to="/asistente-ia" icon={faRobot} label="Asistente IA" isExpanded={isExpanded} />
+            {/* CORRECCIÓN: Este es un NavLink, no un botón que abre un modal */}
             <SidebarItem to="/generador-escritos" icon={faFileSignature} label="Generador de Escritos" isExpanded={isExpanded} />
             <SidebarItem to="/calculator" icon={faCalculator} label="Calculadora de Plazos" isExpanded={isExpanded} />
           </nav>
@@ -94,7 +87,6 @@ export function Sidebar({ isMobileOpen, isExpanded, onToggleExpand }: SidebarPro
         </div>
       </div>
       
-      {/* Botón para colapsar/expandir el sidebar (solo en desktop) */}
       <div className="p-4 border-t border-white/20 hidden md:block">
         <button 
           onClick={onToggleExpand} 

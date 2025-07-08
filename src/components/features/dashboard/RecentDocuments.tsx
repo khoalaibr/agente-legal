@@ -1,23 +1,18 @@
 import { Card } from '../../ui/Card';
 import { useAppSelector } from '../../../hooks/useRedux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileAlt, faFilePdf, faFileExcel, faDownload, faEdit, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faFilePdf, faFileExcel, faDownload, faEdit, faEllipsisV, faFileContract, faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 import { clsx } from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 // Mapeo de nombres de icono a los objetos de icono reales
 const documentIconMap: { [key: string]: IconDefinition } = {
+  'file-contract': faFileContract,
   'file-alt': faFileAlt,
-  'file-pdf': faFilePdf,
-  'file-excel': faFileExcel,
+  'file-invoice': faFileInvoice,
+  'file-pdf': faFilePdf, // Añadido para completitud
+  'file-excel': faFileExcel, // Añadido para completitud
 };
-
-// Mapeo de nombres de icono a colores
-const documentIconColorMap: { [key: string]: string } = {
-    'file-alt': 'text-accent-600',
-    'file-pdf': 'text-red-600',
-    'file-excel': 'text-green-600',
-}
 
 export function RecentDocuments() {
   const documents = useAppSelector((state) => state.dashboard.recentDocuments);
@@ -48,17 +43,22 @@ export function RecentDocuments() {
                   <div className="flex items-center">
                     <FontAwesomeIcon
                       icon={documentIconMap[doc.icon]}
-                      className={clsx('mr-3', documentIconColorMap[doc.icon])}
+                      className={clsx('mr-3', doc.iconColor)}
                     />
-                    <span className="text-sm font-medium text-secondary-800">{doc.name}</span>
+                    <span className="text-sm font-medium text-secondary-800">{doc.title}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-secondary-600">{doc.case}</td>
-                <td className="px-4 py-3 text-sm text-secondary-600">{doc.date}</td>
+                {/* CORRECCIÓN: Usamos doc.caseName */}
+                <td className="px-4 py-3 text-sm text-secondary-600">{doc.caseName}</td>
+                {/* CORRECCIÓN: Usamos doc.lastUpdated */}
+                <td className="px-4 py-3 text-sm text-secondary-600">{doc.lastUpdated}</td>
                 <td className="px-4 py-3">
-                  <span className={clsx('px-2 py-1 text-xs rounded-full font-medium', doc.typeColor)}>
-                    {doc.type}
-                  </span>
+                  {/* CORRECCIÓN: Usamos el primer tag del array 'tags' */}
+                  {doc.tags.length > 0 && (
+                    <span className={clsx('px-2 py-1 text-xs rounded-full font-medium', doc.tags[0].color)}>
+                      {doc.tags[0].text}
+                    </span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-sm">
                   <button className="text-secondary-500 hover:text-secondary-700 mr-3" aria-label="Descargar">

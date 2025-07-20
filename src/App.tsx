@@ -7,6 +7,7 @@ import { DocumentsPage } from './pages/DocumentsPage';
 import { AgendaPage } from './pages/AgendaPage';
 import { AIAssistantPage } from './pages/AIAssistantPage';
 import { DocumentGeneratorPage } from './pages/DocumentGeneratorPage'; // <-- Importamos
+import { ClientsPage } from './pages/ClientsPage';
 
 function App() {
   return (
@@ -19,9 +20,8 @@ function App() {
       <Route path="/documents" element={<PageLayout><DocumentsPage /></PageLayout>} />
       <Route path="/agenda" element={<PageLayout><AgendaPage /></PageLayout>} />
       <Route path="/asistente-ia" element={<PageLayout><AIAssistantPage /></PageLayout>} />
-      
-      {/* Nueva Ruta para el Generador de Escritos */}
       <Route path="/generador-escritos" element={<PageLayout><DocumentGeneratorPage /></PageLayout>} />
+      <Route path="/clients" element={<PageLayout><ClientsPage /></PageLayout>} />
     </Routes>
   );
 }

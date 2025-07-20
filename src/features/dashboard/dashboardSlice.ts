@@ -119,6 +119,27 @@ export interface CategoryState {
     templateCount: number;
 }
 
+export interface ClientState {
+  id: string;
+  name: string;
+  type: 'Persona' | 'Empresa';
+  status: 'Activo' | 'Inactivo' | 'Pendiente' | 'Conflicto';
+  contact: {
+    email: string;
+    phone: string;
+    address: string;
+  };
+  tags: { text: string; color: string }[];
+  activeCasesCount: number;
+  lastCase: string;
+  riskLevel: 'Bajo' | 'Medio' | 'Alto';
+  valueLevel: 'Bajo' | 'Medio' | 'Alto';
+  lastActivity: string;
+  lastActivityDate: string;
+  avatarUrl?: string;
+  isFavorite?: boolean;
+}
+
 interface AppState {
   stats: StatCardState[];
   recentCases: CaseState[];
@@ -134,6 +155,7 @@ interface AppState {
   };
   templates: TemplateState[];
   categories: CategoryState[];
+  clients: ClientState[];
 }
 
 const initialState: AppState = {
@@ -184,7 +206,56 @@ const initialState: AppState = {
   categories: [
     { id: 'cat-1', name: 'Civil', icon: 'home', iconColor: 'text-blue-600', bgColor: 'bg-blue-100', templateCount: 42 },
     { id: 'cat-2', name: 'Laboral', icon: 'briefcase', iconColor: 'text-pink-600', bgColor: 'bg-pink-100', templateCount: 28 },
-  ]
+  ],
+  clients: [
+    {
+      id: 'client-1',
+      name: 'Juan Pérez',
+      type: 'Persona',
+      status: 'Activo',
+      contact: { email: 'juan.perez@email.com', phone: '+598 99 123 456', address: 'Montevideo, Uruguay' },
+      tags: [{ text: 'Laboral', color: 'bg-pink-100 text-pink-800' }, { text: 'Civil', color: 'bg-blue-100 text-blue-800' }],
+      activeCasesCount: 2,
+      lastCase: 'Despido injustificado',
+      riskLevel: 'Bajo',
+      valueLevel: 'Alto',
+      lastActivity: 'Audiencia laboral',
+      lastActivityDate: 'Hace 30 días',
+      avatarUrl: 'https://randomuser.me/api/portraits/men/72.jpg',
+      isFavorite: false,
+    },
+    {
+      id: 'client-2',
+      name: 'Constructora Rodríguez S.A.',
+      type: 'Empresa',
+      status: 'Activo',
+      contact: { email: 'contacto@constructorarodriguez.com', phone: '+598 2 456 7890', address: 'Montevideo, Uruguay' },
+      tags: [{ text: 'Comercial', color: 'bg-yellow-100 text-yellow-800' }, { text: 'Laboral', color: 'bg-pink-100 text-pink-800' }],
+      activeCasesCount: 5,
+      lastCase: 'Contrato de obra',
+      riskLevel: 'Alto',
+      valueLevel: 'Alto',
+      lastActivity: 'Reunión contractual',
+      lastActivityDate: 'Hace 5 días',
+      isFavorite: false,
+    },
+    {
+      id: 'client-3',
+      name: 'María González',
+      type: 'Persona',
+      status: 'Activo',
+      contact: { email: 'maria.gonzalez@email.com', phone: '+598 99 789 012', address: 'Punta del Este, Uruguay' },
+      tags: [{ text: 'Familia', color: 'bg-green-100 text-green-800' }, { text: 'Civil', color: 'bg-blue-100 text-blue-800' }],
+      activeCasesCount: 1,
+      lastCase: 'Divorcio',
+      riskLevel: 'Bajo',
+      valueLevel: 'Medio',
+      lastActivity: 'Consulta telefónica',
+      lastActivityDate: 'Hace 2 días',
+      avatarUrl: 'https://randomuser.me/api/portraits/women/58.jpg',
+      isFavorite: true,
+    },
+  ],
 };
 
 type AddTaskPayload = Omit<TaskState, 'id' | 'completed'>;
